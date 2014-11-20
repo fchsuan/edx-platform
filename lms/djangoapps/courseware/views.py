@@ -346,6 +346,13 @@ def _index_bulk_op(request, course_key, chapter, section, position):
     """
     Render the index page for the specified course.
     """
+    # Verify that position a string is in fact an int
+    if position is not None:
+        try:
+            int(position)
+        except ValueError:
+            raise Http404("Position {} is not an integer!".format(position))
+
     user = request.user
     course = get_course_with_access(user, 'load', course_key, depth=2)
 
@@ -472,13 +479,6 @@ def _index_bulk_op(request, course_key, chapter, section, position):
             section_field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
                 course_key, user, section_descriptor, depth=None, asides=XBlockAsidesConfig.possible_asides()
             )
-
-            # Verify that position a string is in fact an int
-            if position is not None:
-                try:
-                    int(position)
-                except ValueError:
-                    raise Http404("Position {} is not an integer!".format(position))
 
             section_module = get_module_for_descriptor(
                 request.user,
