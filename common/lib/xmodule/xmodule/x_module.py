@@ -387,9 +387,9 @@ class XModuleMixin(XBlockMixin):
                          SEQUENCE
                             |
                          VERTICAL
-                        /        \
+                        /        \\
                  SPLIT_TEST      DISCUSSION
-                /        \
+                /        \\
            VIDEO A      VIDEO B
 
         Essentially, this function returns a list of display_names (e.g. content titles)
