@@ -133,9 +133,18 @@ function(Backbone, _, str, ModuleUtils) {
              */
             'has_content_group_components': null,
             /**
-             * Indicate the type of xblock
+             * actions defines the state of delete, drag and add functionality for a xblock.
              */
-            'override_type': null
+            'actions': null,
+            /**
+             * visible to UI.
+             */
+            'is_visible': null,
+            /**
+             * Explanatory message for xblock that need to show.
+             */
+            'explanatory_message': null
+
         },
 
         initialize: function () {
@@ -172,62 +181,38 @@ function(Backbone, _, str, ModuleUtils) {
             return !this.get('published') || this.get('has_changes');
         },
 
-        /**
-         * Return true if section content is required to show.
-         * currently, check section for an entrance exam.
-        */
-        showSectionContent: function(){
-            //get the type of xblock
-            var type = this.getOverrideType();
+        isDeletable: function() {
+            return this.isActionRequired('deletable');
+        },
 
-            if(type !=null) {
-                //hide the delete/drag icon if type is entrance exam.
-                if (_.has(type, 'is_entrance_exam_section') && type['is_entrance_exam_section']) {
-                    return false;
-                }
+        isDraggable: function() {
+            return this.isActionRequired('draggable');
+        },
+
+        isAddable: function(){
+            return this.isActionRequired('addable');
+        },
+
+        isVisible: function(){
+            if(this.get('is_visible')!= null) {
+              return this.get('is_visible');
             }
             return true;
         },
 
         /**
-         * Return true if subsection content is required to show.
-         * currently, check subsection for an entrance exam.
+         * Return true if action is required e.g. delete, drag, add new etc.
+         * @return {boolean}
         */
-        showSubSectionContent: function() {
-           var type = this.getOverrideType();
-
-           if(type !=null) {
-               //hide the subsection if block is an entrance exam.
-               if (_.has(type, 'is_entrance_exam_subsection') && type['is_entrance_exam_subsection']) {
-                   return false;
-               }
-           }
-           return true;
-       },
-
-        /**
-         * Return the type of xblock.
-        */
-       getOverrideType: function() {
-           var type = null;
-           if(this.get('override_type') != null) {
-               var type = this.get('override_type');
-           }
-           return type;
-        },
-
-       getExamScore: function() {
-            var type = this.getOverrideType();
-            var score = null;
-
-            //if module is entrance exam section/chapter then fetch its minimum passing score.
-            if(type !=null) {
-                if (_.has(type, 'is_entrance_exam_section') && type['is_entrance_exam_section']) {
-                    score = type['exam_min_score']
+        isActionRequired: function(actionName) {
+            var actions = this.get('actions');
+            if(actions !=null) {
+                if (_.has(actions, actionName) && !actions[actionName]) {
+                    return false;
                 }
             }
-            return score;
-       },
+            return true;
+        },
 
         /**
          * Return a list of convenience methods to check affiliation to the category.

@@ -781,18 +781,17 @@ def create_xblock_info(xblock, data=None, metadata=None, include_ancestor_info=F
         visibility_state = None
     published = modulestore().has_published_version(xblock) if not is_library_block else None
 
-    #instead of adding a new feature directly into xblock-info, we should add them into override_type.
-    override_type = {}
+    # defining the default state 'True' of delete, drag and add actions into xblock_actions dict.
+    xblock_actions = {'deletable': True, 'draggable': True, 'addable': True}
+    explanatory_message = None
     if getattr(xblock, "is_entrance_exam", None):
-        override_type['is_entrance_exam_section'] = xblock.is_entrance_exam
+        # Entrance exam section should not be deletable, draggable and not have 'New Subsection' button.
+        xblock_actions['deletable'] = xblock_actions['addable'] = xblock_actions['draggable'] = False
         if parent_xblock is None:
             parent_xblock = get_parent_xblock(xblock)
-        override_type['exam_min_score'] = int(parent_xblock.entrance_exam_minimum_score_pct * 100)
 
-    # If the xblock is a subsection of an entrance exam then we set 'is_entrance_exam_subsection' true for over_type.
-    # we need to hide the subsection content in case of entrance exam.
-    if xblock.category == 'sequential' and getattr(parent_xblock, "is_entrance_exam", False):
-        override_type['is_entrance_exam_subsection'] = True
+        explanatory_message = 'Students must score {score}% or higher to access course materials.'.format(
+            score=int(parent_xblock.entrance_exam_minimum_score_pct * 100))
 
     xblock_info = {
         "id": unicode(xblock.location),
@@ -813,8 +812,14 @@ def create_xblock_info(xblock, data=None, metadata=None, include_ancestor_info=F
         "format": xblock.format,
         "course_graders": json.dumps([grader.get('type') for grader in graders]),
         "has_changes": has_changes,
-        "override_type": override_type,
+        "actions": xblock_actions,
+        "explanatory_message": explanatory_message
     }
+
+    # Entrance exam subsection should be hidden.
+    if xblock.category == 'sequential' and getattr(parent_xblock, "is_entrance_exam", False):
+        xblock_info["is_visible"] = False
+
     if data is not None:
         xblock_info["data"] = data
     if metadata is not None:

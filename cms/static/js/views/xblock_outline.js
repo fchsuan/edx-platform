@@ -45,10 +45,10 @@ define(["jquery", "underscore", "gettext", "js/views/baseview", "js/views/utils/
                 this.addButtonActions(this.$el);
                 this.addNameEditor();
 
-                if (this.model.get('override_type') != null) {
-                    var type = this.model.get('override_type');
-                    //As entrance exam does not contains subsection so we are setting the locator in order to show expanded.
-                    if (_.has(type, 'is_entrance_exam_subsection') && type['is_entrance_exam_subsection']) {
+                if (this.model.get('is_visible') != null) {
+                    // Currently an entrance exam does not contains subsection.
+                    // So we are setting the locator in order to show expanded.
+                    if (!this.model.get('is_visible')) {
                         var locator = this.model.get('id');
                         if(!_.isUndefined(this.expandedLocators) && !this.expandedLocators.contains(locator)) {
                             this.expandedLocators.add(locator);

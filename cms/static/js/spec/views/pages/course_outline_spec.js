@@ -230,7 +230,7 @@ define(["jquery", "sinon", "js/common_helpers/ajax_helpers", "js/views/utils/vie
                 ]);
                 mockCourseEntranceExamJSON = createMockCourseJSON({}, [
                     createMockSectionJSON({}, [
-                        createMockSubsectionJSON({'override_type': {'is_entrance_exam_subsection':true}}, [
+                        createMockSubsectionJSON({'is_visible': false}, [
                             createMockVerticalJSON()
                         ])
                     ])
