@@ -468,4 +468,3 @@ FACEBOOK_API_VERSION = "v2.2"
 
 # Certificates Views
 FEATURES['CERTIFICATES_HTML_VIEW'] = True
-FEATURES['CERTS_HTML_VIEW_CONFIG_PATH'] = 'lms/envs/certificates_html_view.json'
