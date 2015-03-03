@@ -94,21 +94,21 @@ $sm-btn-linkedin: #0077b5;
 
         h2 {
             text-align: center;
+            text-transform: none;
 
             .text {
                 position: relative;
                 top: -2px; // Aligns center of text with center of line (CR)
+                z-index: 6;
                 padding: 0 $baseline;
                 background: $white;
-                text-transform: none;
-                z-index: 6;
             }
         }
     }
 
     .nav-btn {
         @extend %btn-secondary-blue-outline;
-        width: 100%;
+        width: 85%;
         height: ($baseline*2);
         text-transform: none;
         text-shadow: none;
@@ -118,8 +118,10 @@ $sm-btn-linkedin: #0077b5;
 
     .form-type {
         @include box-sizing(border-box);
-        width: flex-grid(6);
+        max-width: 400px;
         margin: 0 auto;
+        padding-left: $baseline; // Don't want to override any top or bottom (CR)
+        padding-right: $baseline // Don't want to override any top or bottom (CR)
     }
 
     .note {
@@ -147,6 +149,10 @@ $sm-btn-linkedin: #0077b5;
         &:focus {
             outline: none;
         }
+    }
+
+    .toggle-form {
+        text-align: center // Centers the text and buttons
     }
 
     .password-reset-form {
@@ -233,6 +239,7 @@ $sm-btn-linkedin: #0077b5;
         }
 
         .field-link {
+            @extend %t-copy-sub2;
             display: block;
             margin-bottom: ($baseline/2);
             margin-top: ($baseline/4);
@@ -432,10 +439,9 @@ $sm-btn-linkedin: #0077b5;
         background: tint($yellow,20%);
 
         .message-title {
-            @extend %t-title;
+            @extend %t-title4;
             font-family: $sans-serif;
             margin: 0 0 ($baseline/4) 0;
-            font-size: em(14);
             font-weight: 600;
         }
 
